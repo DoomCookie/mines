@@ -28,6 +28,9 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,90">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -114,16 +117,26 @@
       </layout>
      </item>
      <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="1" column="0">
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>PushButton</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLCDNumber" name="lcdNumber_3"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -143,6 +156,47 @@
     </property>
    </widget>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>585</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+  </widget>
+  <action name="action">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Новичок</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Любитель</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Профессионал</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Суперчеловек</string>
+   </property>
+  </action>
+  <action name="actioncxv">
+   <property name="text">
+    <string>cxv</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

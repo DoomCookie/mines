@@ -1,28 +1,28 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout
 from PyQt5.QtWidgets import QSpacerItem, QVBoxLayout, QHBoxLayout, QLCDNumber
-from PyQt5.QtWidgets import QSizePolicy
+from PyQt5.QtWidgets import QSizePolicy, QAction
 from PyQt5.QtGui import QPainter, QColor, QBrush, QIcon
 from PyQt5.QtCore import Qt, QPoint, QSize
 
 
 class minesUI:
 
-    def __init__(self, window, level):
+    def __init__(self, window):
         self.window = window
-        self.level = level
+        self.level = window.level
         self.levels = {
             'Beginer': {'x': 9, 'y': 9, 'mines': 10, 'size': 30},
             'Intermediate': {'x': 16, 'y': 16, 'mines': 40, 'size': 30},
             'Expert': {'x': 30, 'y': 16, 'mines': 99, 'size': 30},
-            'Superhuman': {'x': 50, 'y': 50, 'mines': 500, 'size': 19}
+            'Superhuman': {'x': 47, 'y': 47, 'mines': 500, 'size': 19}
         }
-    def create(self):
-        x, y, mines, size = self.levels['Beginer'].values()
+    def initUI(self):
+        self.x, self.y, self.mines, self.size = self.levels[self.level].values()
         self.window.vertL = QVBoxLayout()
         self.window.horL = QHBoxLayout()
         self.window.lcd_mines = QLCDNumber()
         self.window.lcd_flags = QLCDNumber()
-        self.window.lcd_mines.display(mines)
+        self.window.lcd_mines.display(self.mines)
         self.window.horL.addWidget(self.window.lcd_mines)
         self.window.btn = QPushButton()
         self.window.btn.setMinimumSize(QSize(30,30))
@@ -37,9 +37,33 @@ class minesUI:
         self.window.grid.setSpacing(0)
         self.window.vertL.addLayout(self.window.grid)
         self.window.vertL.setStretch(1,90)
-        positions = [(i,j) for i in range(y) for j in range(x)]
+        self.window.centralwidget.setLayout(self.window.vertL)
+        self.window.setGeometry(0,0,0,0)
+        self.window.setFixedSize(0,0)
+        self.create_field()
+
+    def create_field(self):
+        positions = [(i,j) for i in range(self.y) for j in range(self.x)]
         for position in positions:
             button = QPushButton('')
-            button.setMinimumSize(QSize(size,size))
+            button.setMinimumSize(QSize(self.size, self.size))
             self.window.grid.addWidget(button, *position)
-        self.window.centralwidget.setLayout(self.window.vertL)
+
+    def restart(self):
+        self.window.hide()
+        positions = [(i,j) for i in range(self.y) for j in range(self.x)]
+        for position in positions:
+            self.window.grid.itemAtPosition(*position).widget().deleteLater()
+        self.x, self.y, self.mines, self.size = self.levels[self.window.level].values()
+        self.window.lcd_mines.display(self.mines)
+        self.window.setFixedSize(0,0)
+        self.create_field()
+        self.window.show()
+
+    def create_toolbar(self, func):
+        dif = self.window.menuBar.addMenu('Сложность')
+        dif.addAction('Новичок')
+        dif.addAction('Любитель')
+        dif.addAction('Эксперт')
+        dif.addAction('Суперчеловек')
+        dif.triggered[QAction].connect(func)

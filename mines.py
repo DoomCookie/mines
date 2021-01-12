@@ -9,20 +9,35 @@ from minesUI import minesUI
 from PyQt5 import uic
 import sys
 
-
+levels = {
+    'Новичок': 'Beginer',
+    'Любитель': 'Intermediate',
+    'Эксперт': 'Expert',
+    'Суперчеловек': 'Superhuman'
+}
 
 class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('mines.ui', self)
-        self.minesUI = minesUI(self,'Beginer')
+        self.level = 'Superhuman'
+        self.minesUI = minesUI(self)
         self.initUI()
 
     def initUI(self):
-        self.minesUI.create()
+        self.minesUI.initUI()
+        self.minesUI.create_toolbar(self.change_dif)
 
-    def push(self):
-        print()
+
+
+    def change_dif(self, item):
+        self.level = levels[item.text()]
+        self.minesUI.restart()
+
+        print(self.level)
+
+
+
 
 
 if __name__ == '__main__':
