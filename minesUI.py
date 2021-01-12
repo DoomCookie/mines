@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout
 from PyQt5.QtWidgets import QSpacerItem, QVBoxLayout, QHBoxLayout, QLCDNumber
-from PyQt5.QtWidgets import QSizePolicy, QAction
+from PyQt5.QtWidgets import QSizePolicy, QAction, QButtonGroup
 from PyQt5.QtGui import QPainter, QColor, QBrush, QIcon
 from PyQt5.QtCore import Qt, QPoint, QSize
 
@@ -16,7 +16,13 @@ class minesUI:
             'Expert': {'x': 30, 'y': 16, 'mines': 99, 'size': 30},
             'Superhuman': {'x': 47, 'y': 47, 'mines': 500, 'size': 19}
         }
-    def initUI(self):
+
+    def initUI(self, func):
+        self.create_background()
+        self.create_field()
+        self.create_toolbar(func)
+
+    def create_background(self):
         self.x, self.y, self.mines, self.size = self.levels[self.level].values()
         self.window.vertL = QVBoxLayout()
         self.window.horL = QHBoxLayout()
@@ -40,14 +46,19 @@ class minesUI:
         self.window.centralwidget.setLayout(self.window.vertL)
         self.window.setGeometry(0,0,0,0)
         self.window.setFixedSize(0,0)
-        self.create_field()
 
     def create_field(self):
         positions = [(i,j) for i in range(self.y) for j in range(self.x)]
+        self.window.btn_grp = QButtonGroup()
+        i = 0
         for position in positions:
-            button = QPushButton('')
+            button = QPushButton(str())
+            i += 1
+            self.window.btn_grp.addButton(button)
             button.setMinimumSize(QSize(self.size, self.size))
             self.window.grid.addWidget(button, *position)
+        # self.window.btn_grp.buttonClicked.connect(self.tst)
+        self.window.btn_grp.buttonClicked.connect(self.window.minesEng.push)
 
     def restart(self):
         self.window.hide()

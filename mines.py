@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPainter, QColor, QBrush, QIcon
 from PyQt5.QtCore import Qt, QPoint, QSize
 
 from minesUI import minesUI
+from minesEng import minesEng
 
 from PyQt5 import uic
 import sys
@@ -20,21 +21,23 @@ class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('mines.ui', self)
-        self.level = 'Superhuman'
+        self.level = 'Beginer'
         self.minesUI = minesUI(self)
+        self.minesEng = minesEng(self)
         self.initUI()
 
-    def initUI(self):
-        self.minesUI.initUI()
-        self.minesUI.create_toolbar(self.change_dif)
+    def mousePressEvent(self, event):
+        print(event.button())
 
+    def initUI(self):
+        self.minesUI.initUI(self.change_dif)
+        self.minesEng.init_field()
 
 
     def change_dif(self, item):
         self.level = levels[item.text()]
         self.minesUI.restart()
-
-        print(self.level)
+        self.minesEng.init_field()
 
 
 
