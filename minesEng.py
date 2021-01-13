@@ -1,4 +1,5 @@
 from random import randint
+from PyQt5.QtGui import QIcon
 
 class minesEng:
 
@@ -11,22 +12,25 @@ class minesEng:
 
 
     def init_field(self):
+        self.lose_game = False
+        self.win_game = False
+        self.flags = set()
         self.height = self.window.minesUI.y
         self.width = self.window.minesUI.x
         self.count_mines = self.window.minesUI.mines
         self.field = [[self.status['nothing'] for x in range(self.width)] for y in range(self.height)]
         mines = self.count_mines
-        self.mines = []
+        self.mines = set()
         while mines != 0:
             n = randint(0, self.height - 1)
             m = randint(0, self.width - 1)
             if self.field[n][m] != self.status['mine']:
                 self.field[n][m] = self.status['mine']
-                self.mines.append(n * self.width + m)
+                self.mines.add(n * self.width + m)
                 mines -= 1
 
 #-------------------------------------------------------------------------------
-        self.draw(self.field)
+        #self.draw(self.field)
 
     def draw(self,field):
         """
@@ -40,24 +44,66 @@ class minesEng:
 #-------------------------------------------------------------------------------
 
     def push(self, item):
-        ind = self.window.grid.indexOf(item)
-        y, x = (self.window.grid.getItemPosition(ind))[:2]
-        neighs = self.get_neigh(x,y)
-        if self.field[y][x] == self.status['mine']:
-            print('Вы проиграли')
-        self.update(x, y)
+        if not(self.lose_game or self.win_game):
+            ind = self.window.grid.indexOf(item)
+            y, x = (self.window.grid.getItemPosition(ind))[:2]
+            neighs = self.get_neigh(x,y)
+            if self.field[y][x] == self.status['mine'] and item.statusTip() != "F":
+                print('Вы проиграли')
+                self.lose(item)
+            if not item.isFlat() and item.statusTip() != "F":
+                item.setFlat(True)
+                item.setStyleSheet(f'border-image: url({self.window.minesUI.num_cells[0]});')
+                self.watch_neigh(x, y, buffer=set())
+            self.win()
         # item.setFlat(True)
         # for neigh in neighs:
         #     self.window.grid.itemAt(neigh).widget().setFlat(True)
 
-    def update(self, x, y):
-        ind = y * self.width + x
-        btn = self.window.grid.itemAt(ind).widget()
+    def flag(self, item):
+        if not(self.lose_game or self.win_game) and not item.isFlat():
+            ind = self.window.grid.indexOf(item)
+            y, x = (self.window.grid.getItemPosition(ind))[:2]
+            if item.statusTip() != "F" and self.window.minesUI.mines > 0:
+                # item.setText('F')
+                self.flags.add(ind)
+                item.setStatusTip('F')
+                item.setStyleSheet(f'border-image: url({self.window.minesUI.flags[1]});')
+                self.window.minesUI.mines -= 1
+            else:
+                # item.setText('')
+                self.flags.remove(ind)
+                item.setStatusTip('')
+                item.setStyleSheet(f'border-image: url({self.window.minesUI.flags[0]});')
+                self.window.minesUI.mines += 1
+            self.window.lcd_mines.display(self.window.minesUI.mines)
+            self.win()
 
-        if not btn.isFlat() and not btn.text() == 'F':
+
+    def win(self):
+        if self.mines == self.flags:
+            for btn in self.window.btn_grp.buttons():
+                if not btn.isFlat() and btn.statusTip() != 'F':
+                    return False
+            self.win_game = True
+            self.window.btn.setStyleSheet(f'border-image: url({self.window.minesUI.faces[3]});')
+            return True
+
+    def lose(self, item):
+        self.lose_game = True
+        for mine in self.mines:
+            btn = self.window.grid.itemAt(mine).widget()
             btn.setFlat(True)
-            self.watch_neigh(x, y, buffer=set())
+            if btn == item:
+                btn.setStyleSheet(f'border-image: url({self.window.minesUI.mines_ic[1]});')
+            elif btn.statusTip() != "F":
+                btn.setStyleSheet(f'border-image: url({self.window.minesUI.mines_ic[0]});')
+        for flag in self.flags:
+            if flag not in self.mines:
+                    btn = self.window.grid.itemAt(flag).widget()
+                    btn.setStyleSheet(f'border-image: url({self.window.minesUI.mines_ic[2]});')
 
+        self.window.btn.setStyleSheet(f'border-image: url(media/face2.png);')
 
     def get_neigh(self, m, n):
         """
@@ -97,9 +143,12 @@ class minesEng:
             ind = n * self.width + m
             btn = self.window.grid.itemAt(ind).widget()
             if count_mines == 0:
-                btn.setFlat(True)
+                if btn.statusTip() != 'F':
+                    btn.setFlat(True)
+                    btn.setStyleSheet(f'border-image: url({self.window.minesUI.num_cells[0]});')
                 for n_neigh, m_neigh in neigh:
                     self.watch_neigh(m_neigh, n_neigh, buffer)
             else:
-                btn.setFlat(True)
-                btn.setText(f"{count_mines}")
+                if btn.statusTip() != "F":
+                    btn.setFlat(True)
+                    btn.setStyleSheet(f'border-image: url({self.window.minesUI.num_cells[count_mines]});')

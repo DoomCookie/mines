@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>585</width>
-    <height>438</height>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,6 +51,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="btn">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -72,14 +75,33 @@
          <property name="statusTip">
           <string/>
          </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">        QPushButton {
+            color: grey;
+            border-top: 3px transparent;
+            border-bottom: 3px transparent;
+            border-right: 10px transparent;
+            border-left: 10px transparent;
+        }</string>
+         </property>
          <property name="text">
           <string/>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>media/t-1.png</normaloff>media/t-1.png</iconset>
+         </property>
          <property name="iconSize">
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>30</width>
+           <height>30</height>
           </size>
+         </property>
+         <property name="shortcut">
+          <string/>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -123,13 +145,27 @@
        </property>
        <item row="1" column="0">
         <widget class="QPushButton" name="pushButton">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 255, 0);
+alternate-background-color: rgb(255, 0, 0);</string>
+         </property>
          <property name="text">
           <string>PushButton</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLCDNumber" name="lcdNumber_3"/>
+        <widget class="QLCDNumber" name="lcdNumber_3">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="pushButton_3">
@@ -142,18 +178,23 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>360</y>
-      <width>111</width>
-      <height>28</height>
+      <x>30</x>
+      <y>330</y>
+      <width>61</width>
+      <height>100</height>
      </rect>
     </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
+    <layout class="QGridLayout" name="grd">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinAndMaxSize</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

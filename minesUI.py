@@ -4,8 +4,40 @@ from PyQt5.QtWidgets import QSizePolicy, QAction, QButtonGroup
 from PyQt5.QtGui import QPainter, QColor, QBrush, QIcon
 from PyQt5.QtCore import Qt, QPoint, QSize
 
+from PushButtonRight import PushButtonRight
 
 class minesUI:
+
+    num_cells = [
+        'media/t0.png',
+        'media/t1.png',
+        'media/t2.png',
+        'media/t3.png',
+        'media/t4.png',
+        'media/t5.png',
+        'media/t6.png',
+        'media/t7.png',
+        'media/t8.png'
+    ]
+
+    faces = [
+        'media/face0.png',
+        'media/face1.png',
+        'media/face2.png',
+        'media/face3.png'
+    ]
+
+    mines_ic = [
+        'media/t-1.png',
+        'media/t-2.png',
+        'media/t-5.png',
+    ]
+
+    flags = [
+        'media/t-3.png',
+        'media/t-4.png',
+        'media/t-6.png'
+    ]
 
     def __init__(self, window):
         self.window = window
@@ -31,9 +63,10 @@ class minesUI:
         self.window.lcd_mines.display(self.mines)
         self.window.horL.addWidget(self.window.lcd_mines)
         self.window.btn = QPushButton()
+        self.window.btn.clicked.connect(self.window.restart)
         self.window.btn.setMinimumSize(QSize(30,30))
         self.window.btn.geometry().setSize(QSize(30,30))
-        self.window.btn.setIcon(QIcon('smile-1.png'))
+        self.window.btn.setStyleSheet('border-image: url(media/face0.png);')
         self.window.horL.addSpacerItem(QSpacerItem(1,1,QSizePolicy.Expanding))
         self.window.horL.addWidget(self.window.btn)
         self.window.horL.addSpacerItem(QSpacerItem(1,1,QSizePolicy.Expanding))
@@ -44,7 +77,7 @@ class minesUI:
         self.window.vertL.addLayout(self.window.grid)
         self.window.vertL.setStretch(1,90)
         self.window.centralwidget.setLayout(self.window.vertL)
-        self.window.setGeometry(0,0,0,0)
+        self.window.setGeometry(20,50,0,0)
         self.window.setFixedSize(0,0)
 
     def create_field(self):
@@ -52,15 +85,18 @@ class minesUI:
         self.window.btn_grp = QButtonGroup()
         i = 0
         for position in positions:
-            button = QPushButton(str())
+            button = PushButtonRight(str(), self.window.minesEng.push, self.window.minesEng.flag)
             i += 1
             self.window.btn_grp.addButton(button)
             button.setMinimumSize(QSize(self.size, self.size))
+            button.geometry().setSize(QSize(self.size,self.size))
+            button.setStyleSheet('border-image: url(media/t-3.png);')
             self.window.grid.addWidget(button, *position)
-        # self.window.btn_grp.buttonClicked.connect(self.tst)
-        self.window.btn_grp.buttonClicked.connect(self.window.minesEng.push)
+        #self.window.btn_grp.buttonClicked.connect(self.tst)
+        # self.window.btn_grp.buttonClicked.connect(self.window.minesEng.push)
 
     def restart(self):
+        self.window.btn.setStyleSheet(f'border-image: url(media/face0.png);')
         self.window.hide()
         positions = [(i,j) for i in range(self.y) for j in range(self.x)]
         for position in positions:

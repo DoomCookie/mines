@@ -26,16 +26,17 @@ class MyWidget(QMainWindow):
         self.minesEng = minesEng(self)
         self.initUI()
 
-    def mousePressEvent(self, event):
-        print(event.button())
-
     def initUI(self):
         self.minesUI.initUI(self.change_dif)
         self.minesEng.init_field()
+        
 
 
     def change_dif(self, item):
         self.level = levels[item.text()]
+        self.restart()
+
+    def restart(self):
         self.minesUI.restart()
         self.minesEng.init_field()
 
