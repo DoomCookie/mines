@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>701</width>
+    <height>332</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Рекорды</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>index.jpg</normaloff>index.jpg</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>681</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="btn_beg">
+         <property name="statusTip">
+          <string>Beginer</string>
+         </property>
+         <property name="text">
+          <string>Новичок</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_inter">
+         <property name="statusTip">
+          <string>Intermediate</string>
+         </property>
+         <property name="text">
+          <string>Любитель</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_exp">
+         <property name="statusTip">
+          <string>Expert</string>
+         </property>
+         <property name="text">
+          <string>Эксперт</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_sh">
+         <property name="statusTip">
+          <string>Superhuman</string>
+         </property>
+         <property name="text">
+          <string>Суперчеловек</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget">
+       <column>
+        <property name="text">
+         <string>Имя</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Сложность</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Время</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Дата</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

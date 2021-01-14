@@ -1,5 +1,5 @@
 from random import randint
-from PyQt5.QtGui import QIcon
+from minesDB import minesDB
 
 class minesEng:
 
@@ -9,6 +9,7 @@ class minesEng:
             'nothing': 0,
             'mine': 1
         }
+        self.minesDB = minesDB()
 
 
     def init_field(self):
@@ -30,7 +31,15 @@ class minesEng:
                 mines -= 1
 
 #-------------------------------------------------------------------------------
-        #self.draw(self.field)
+        print()
+        self.draw(self.field)
+
+    def get_win(self):
+        for btn in self.window.btn_grp.buttons():
+            if not btn.isFlat() and self.window.grid.indexOf(btn) not in self.mines:
+                self.push(btn)
+            if self.window.grid.indexOf(btn) in self.mines:
+                self.flag(btn)
 
     def draw(self,field):
         """
@@ -87,6 +96,11 @@ class minesEng:
                     return False
             self.win_game = True
             self.window.btn.setStyleSheet(f'border-image: url({self.window.minesUI.faces[3]});')
+            self.window.tmr.stop()
+            self.minesDB.add_result(
+                self.window.level,
+                self.window.timer
+            )
             return True
 
     def lose(self, item):
@@ -102,7 +116,7 @@ class minesEng:
             if flag not in self.mines:
                     btn = self.window.grid.itemAt(flag).widget()
                     btn.setStyleSheet(f'border-image: url({self.window.minesUI.mines_ic[2]});')
-
+        self.window.tmr.stop()
         self.window.btn.setStyleSheet(f'border-image: url(media/face2.png);')
 
     def get_neigh(self, m, n):
