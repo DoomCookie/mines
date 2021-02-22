@@ -2,7 +2,9 @@ from random import randint
 from minesDB import minesDB
 
 class minesEng:
-
+    """
+        Класс, который просчитывает всю логику игры.
+    """
     def __init__(self, window):
         self.window = window
         self.status = {
@@ -13,6 +15,10 @@ class minesEng:
 
 
     def init_field(self):
+        """
+            Метод, который создаёт поле для игры в зависимости от сложности.
+            Заполняет поле рандомно минами и сохраняет его в памяти.
+        """
         self.lose_game = False
         self.win_game = False
         self.flags = set()
@@ -31,56 +37,67 @@ class minesEng:
                 mines -= 1
 
 #-------------------------------------------------------------------------------
-        print()
-        self.draw(self.field)
-
-    def get_win(self):
-        for btn in self.window.btn_grp.buttons():
-            if not btn.isFlat() and self.window.grid.indexOf(btn) not in self.mines:
-                self.push(btn)
-            if self.window.grid.indexOf(btn) in self.mines:
-                self.flag(btn)
-
-    def draw(self,field):
-        """
-        Отрисовка игрового поля.
-        Принимает поле.
-        """
-        for line in field:
-            for cell in line:
-                print(cell, end=' ')
-            print()
+    # часть кода для дебага
+    #
+    # отрисовка поля с минами в консоли
+    #     print()
+    #     self.draw(self.field)
+    #
+    # def get_win(self): # функция мгновенной победы
+    #     for btn in self.window.btn_grp.buttons():
+    #         if not btn.isFlat() and self.window.grid.indexOf(btn) not in self.mines:
+    #             self.push(btn)
+    #         if self.window.grid.indexOf(btn) in self.mines:
+    #             self.flag(btn)
+    #
+    # def draw(self,field): # функция отрисовки поля в консоли с минами
+    #     """
+    #     Отрисовка игрового поля.
+    #     Принимает поле.
+    #     """
+    #     for line in field:
+    #         for cell in line:
+    #             print(cell, end=' ')
+    #         print()
 #-------------------------------------------------------------------------------
 
+
     def push(self, item):
+        """
+            Метод, который вызывается при нажатии левой кнопкой мыши на ячейку поля.
+            Проверяет, что игра ещё идет, что на этой клетке нет мины или флага
+            после чего расчитывает сколько мин вокруг него.
+            Проверяет проиграли или выиграли после совершения хода.
+        """
         if not(self.lose_game or self.win_game):
             ind = self.window.grid.indexOf(item)
             y, x = (self.window.grid.getItemPosition(ind))[:2]
             neighs = self.get_neigh(x,y)
             if self.field[y][x] == self.status['mine'] and item.statusTip() != "F":
-                print('Вы проиграли')
                 self.lose(item)
             if not item.isFlat() and item.statusTip() != "F":
                 item.setFlat(True)
                 item.setStyleSheet(f'border-image: url({self.window.minesUI.num_cells[0]});')
                 self.watch_neigh(x, y, buffer=set())
             self.win()
-        # item.setFlat(True)
-        # for neigh in neighs:
-        #     self.window.grid.itemAt(neigh).widget().setFlat(True)
+
 
     def flag(self, item):
+        """
+            Метод, который вызывается при нажатии правой кнопкой мыши на ячейку поля.
+            Проверяет, что игра ещё идет, что эта клетка ещё не открыта
+            если флаг стоит, удаляет его, если нет ставит.
+            Изменяет количество доступных флагов и делает проверку на победу.
+        """
         if not(self.lose_game or self.win_game) and not item.isFlat():
             ind = self.window.grid.indexOf(item)
             y, x = (self.window.grid.getItemPosition(ind))[:2]
             if item.statusTip() != "F" and self.window.minesUI.mines > 0:
-                # item.setText('F')
                 self.flags.add(ind)
                 item.setStatusTip('F')
                 item.setStyleSheet(f'border-image: url({self.window.minesUI.flags[1]});')
                 self.window.minesUI.mines -= 1
             else:
-                # item.setText('')
                 self.flags.remove(ind)
                 item.setStatusTip('')
                 item.setStyleSheet(f'border-image: url({self.window.minesUI.flags[0]});')
@@ -90,6 +107,11 @@ class minesEng:
 
 
     def win(self):
+        """
+            Метод, который проверяет выиграл ли игрок или нет.
+            Смотрит все ли ячеки с минами помечены флагом и открыты ли все остальные.
+            Если это так, то останавливате таймер и добавляет результат в базу данных.
+        """
         if self.mines == self.flags:
             for btn in self.window.btn_grp.buttons():
                 if not btn.isFlat() and btn.statusTip() != 'F':
@@ -103,7 +125,12 @@ class minesEng:
             )
             return True
 
+
     def lose(self, item):
+        """
+            Метод, который вызывается в случае поражения.
+            Помечает все мины на поле, показывая верно ли были установлены флаги.
+        """
         self.lose_game = True
         for mine in self.mines:
             btn = self.window.grid.itemAt(mine).widget()
@@ -119,6 +146,7 @@ class minesEng:
         self.window.tmr.stop()
         self.window.btn.setStyleSheet(f'border-image: url(media/face2.png);')
 
+
     def get_neigh(self, m, n):
         """
         Функция нахождения соседей клетки.
@@ -131,9 +159,9 @@ class minesEng:
                 if i == n and j == m:
                     continue
                 elif ((0 <= i < self.height) and (0 <= j < self.width)):
-                    #neigh.append(i * self.width + j)
                     neigh.append((i, j))
         return neigh
+
 
     def watch_neigh(self, m, n, buffer=set()):
         """
