@@ -1,4 +1,4 @@
-import sqlite3
+from sqlite3 import connect
 from os import path, getlogin
 from PyQt5.QtCore import QDateTime, QTime
 
@@ -11,7 +11,7 @@ class minesDB:
         self.db = 'db/minesDB.sqlite' # файл с баззой данных
         # если файл существует то мы его открываем, если нет, то создаём.
         if not path.isfile(self.db):
-            self.con = sqlite3.connect(self.db)
+            self.con = connect(self.db)
             self.cur = self.con.cursor()
             self.cur.execute("""CREATE TABLE player_score(
                             player_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +20,7 @@ class minesDB:
                             player_time INTEGER NOT NULL,
                             player_date DATE NOT NULL)""")
         else:
-            self.con = sqlite3.connect(self.db)
+            self.con = connect(self.db)
             self.cur = self.con.cursor()
 
 

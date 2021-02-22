@@ -2,6 +2,10 @@ from PyQt5 import QtWidgets, Qt, QtCore
 
 
 class PushButtonRight(QtWidgets.QPushButton):
+    """
+        Собственный класс наследованный от QPushButton
+        нужен для того,чтобы отследить какая именно кнопка мыши была нажата.
+    """
     left_click = QtCore.pyqtSignal()
     right_click = QtCore.pyqtSignal()
 
